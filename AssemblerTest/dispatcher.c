@@ -1,6 +1,5 @@
 // EVT_MAX 4   //DELETE
 
-
 typedef enum event_type {
 	/*
 	 * System real-time messages.
@@ -24,7 +23,6 @@ typedef enum event_type {
 	 EVT_CHAN_PROGRAM_CHANGE,
 	 EVT_CHAN_AFTERTOUCH,
 	 EVT_CHAN_PITCH_BEND,
-
 	 /*
 	  * Placeholder whose value is equal to the total number of event types
 	  * that we support above.
@@ -35,6 +33,13 @@ typedef enum event_type {
  * Routines return a status code.
  */
 typedef signed char status_t;
+
+// The following three variables are updated during message parsing.
+static char g_current_channel = 0;
+static char g_data_byte_one = 0;
+static char g_data_byte_two = 0;
+
+
 
 /*
 *This library uses an event - driven paradigm for receiving data : callers
@@ -54,18 +59,23 @@ typedef void (*midi_event_callback_t)(char chan, char data1, char data2);
 
 
 
+
 // Callback table.
 static midi_event_callback_t g_callbacks[EVT_MAX] = { 0 };
 
 
 // The null event callback is used by default for all events.
-static void null_event_cb(char channel, char a, char b) {
+ void null_event_cb(char channel, char a, char b){
 	// Do nothing. The invoke_callback() function will properly implement the
+	printf("NIX");
 	// global message counter.
 }
 
-void event_cb_note_on() {
+void note_on_event_cb(char channel, char a, char b) {
 	printf("Note on");
+
+}void chan_aftertouch_event_cb(char channel, char a, char b) {
+	printf("Touch event");
 
 }
 
@@ -81,7 +91,7 @@ static inline void invoke_callback(int evt) {
 //	++g_message_counter;
 
 	// Invoke the callback.
-//	(g_callbacks[evt])(g_current_channel, g_data_byte_one, g_data_byte_two);
+	(g_callbacks[evt])(1,2,3);
 
 	// Clear data state
 //	g_data_byte_one = 0;
@@ -111,8 +121,13 @@ status_t midi_init() {
 
 
 void dispatcher_main() {
-	midi_init;
-		midi_register_event_handler(EVT_CHAN_NOTE_ON, event_cb_note_on);
-		invoke_callback(0);
+	    midi_init();														//Set callbacktable to null callback
+		midi_register_event_handler(EVT_CHAN_NOTE_ON, note_on_event_cb);
+		invoke_callback(EVT_CHAN_NOTE_ON);
+		invoke_callback(EVT_CHAN_AFTERTOUCH);
+		midi_register_event_handler(EVT_CHAN_AFTERTOUCH, chan_aftertouch_event_cb);
+		invoke_callback(EVT_CHAN_AFTERTOUCH);
+
+		
 }
 

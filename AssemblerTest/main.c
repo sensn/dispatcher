@@ -33,17 +33,19 @@ int foo1(int(*foo)(int,int),int a, int b)
 
 int main()
 {
+	dispatcher_main();
+	//**********
 
-	printf("foo2 = %p\n", &foo2);
+	//printf("foo2 = %p\n", &foo2);
 
-	//foo1(foo2(2,3),1,2);           // foo 2 wird sofort aufgerufen
-	
-	printf("----\n");
-	
-	printf("foo3 = %p\n", &foo3);     
-	foo1(&foo3,1,2);                  // foo3 wird der variablen foo zugeordnet und ist in foo1 als foo(); aufrufbar.
+	////foo1(foo2(2,3),1,2);           // foo 2 wird sofort aufgerufen
+	//
+	//printf("----\n");
+	//
+	//printf("foo3 = %p\n", &foo3);     
+	//foo1(&foo3,1,2);                  // foo3 wird der variablen foo zugeordnet und ist in foo1 als foo(); aufrufbar.
 
-	
+	//
 
 }
 
